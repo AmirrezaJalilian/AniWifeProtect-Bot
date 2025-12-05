@@ -1,44 +1,52 @@
 from dbmanagers.staff import add_moderator, remove_moderator, moderator
-
+from Logger import send_notice,send_error,send_info
 
 async def add_moderator_(update, context, args):
     try:
-        if args:
-            target_id = int(args[0])
-        else:
-            reply = update.effective_message.reply_to_message
-            if not reply:
-                await update.effective_message.reply_text("Please Reply Ot Provide ID")
-                return
-            target_id = reply.from_user.id
+        reply = update.effective_message.reply_to_message
+        user_id = update.effective_user.id
+        if not reply:
+            await update.effective_message.reply_text("Please Reply To An User")
+            await send_notice(update,context,user_id,"Tried To Use staff.add.moderator Command")
+            return
+        target_id = reply.from_user.id
         
         if moderator(target_id) is not None:
             await update.effective_message.reply_text("User Already Is Moderator")
+            await send_notice(update,context,update.effective_user.id,f"Tried To Add Moderator User {target_id}")
             return
         add_moderator(target_id)
-        await update.effective_message.reply_text(f"Moderator Added - ID: `{target_id}`", parse_mode="Markdown")
+        textt=f"Moderator Added - ID: `{target_id}`"
+        await update.effective_message.reply_text(textt, parse_mode="Markdown")
+        await send_info(update,context,user_id,textt)
     except ValueError:
-        await update.effective_message.reply_text("Invalid ID Format")
+        tttt="Invalid ID Format"
+        await update.effective_message.reply_text(tttt)
+        await send_error(update,context,user_id,tttt+"\n Use staff.add.moderator Command")
     except Exception as e:
-        print(f"Error in add_moderator_: {e}")
+        await send_error(update,context,user_id,f"Error in add_moderator_: {e}")
 
 async def remove_moderator_(update, context, args):
     try:
-        if args:
-            target_id = int(args[0])
-        else:
-            reply = update.effective_message.reply_to_message
-            if not reply:
-                await update.effective_message.reply_text("Please Reply Ot Provide ID")
-                return
-            target_id = reply.from_user.id
+        reply = update.effective_message.reply_to_message
+        user_id = update.effective_user.id
+        if not reply:
+            await update.effective_message.reply_text("Please Reply To An User")
+            await send_notice(update,context,user_id,"Tried To Use staff.remove.moderator Command")
+            return
+        target_id = reply.from_user.id
+        
         if moderator(target_id) is None:
             await update.effective_message.reply_text("User Is Not Moderator")
+            await send_notice(update,context,update.effective_user.id,f"Tried To Remove Moderator User {target_id}")
             return
         remove_moderator(target_id)
-        await update.effective_message.reply_text(f"Moderator Removed - ID: `{target_id}`", parse_mode="Markdown")
-        
+        textt=f"Moderator Removed - ID: `{target_id}`"
+        await update.effective_message.reply_text(textt, parse_mode="Markdown")
+        await send_info(update,context,user_id,textt)
     except ValueError:
-        await update.effective_message.reply_text("Invalid ID Format")
+        tttt="Invalid ID Format"
+        await update.effective_message.reply_text(tttt)
+        await send_error(update,context,user_id,tttt+"\n Use staff.remove.moderator Command")
     except Exception as e:
-        print(f"Error in remove_moderator_: {e}")
+        await send_error(update,context,user_id,f"Error in remove_moderator_: {e}")
