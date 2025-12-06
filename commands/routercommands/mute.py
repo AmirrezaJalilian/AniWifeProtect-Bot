@@ -2,12 +2,12 @@ from telegram import Update,ChatPermissions
 from telegram.ext import ContextTypes
 from Logger import send_notice,send_info
 from dbmanagers.user import is_mute,mute,unmute,get_mutes
-from func import is_owner_or_admin
+from func import is_owner_or_admin_or_moderator
 
 async def mute_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
     reply = update.effective_message.reply_to_message
     
@@ -34,7 +34,7 @@ async def mute_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
 async def unmute_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
     reply = update.effective_message.reply_to_message
     
@@ -61,12 +61,12 @@ async def unmute_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
 async def mute_list_bot(update: Update, context: ContextTypes.DEFAULT_TYPE,args):
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
     bans = get_mutes()
 
     if not bans:
-        await update.effective_message.reply_text("No muted users.")
+        await update.effective_message.reply_text("No Muted Users.")
         return
 
     text = f"List Mutes From Bot:\nCount: {len(bans)}\n\n"

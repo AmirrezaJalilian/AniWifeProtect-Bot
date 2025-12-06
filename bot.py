@@ -13,14 +13,12 @@ def main():
     app.add_handler(MessageHandler(my_channel & IS_NEW_POST, handle_new_post))
     
     app.add_handler(MessageHandler(my_channel & IS_EDITED_POST, handle_edited_post))
+    
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
     app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, join_handler))
 
     app.add_handler(MessageHandler(filters.StatusUpdate.LEFT_CHAT_MEMBER, left_handler))
-
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, anti_link))
-
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
 
     app.run_polling(drop_pending_updates=True)
 

@@ -9,7 +9,7 @@ async def ban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin(user_id):
         return
     
     reply = update.effective_message.reply_to_message
@@ -17,8 +17,6 @@ async def ban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     if not reply:
         await update.effective_message.reply_text("Please Reply To An User.")
         return
-    
-    
     
     target = reply.from_user
     
@@ -35,7 +33,7 @@ async def ban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
 async def unban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin(user_id):
         return
     reply = update.effective_message.reply_to_message
     
@@ -60,17 +58,17 @@ async def ban_list(update: Update, context: ContextTypes.DEFAULT_TYPE,args):
     
     user_id = update.effective_user.id
     
-    if not is_owner_or_admin(user_id):
+    if not await is_owner_or_admin(user_id):
         return
 
     bans = get_bans()
 
     if not bans:
-        await update.effective_message.reply_text("No muted users.")
+        await update.effective_message.reply_text("No Baned Users.")
         return
 
     user_id = update.effective_user.id
-    text = f"List Mutes From Bot:\nCount: {len(bans)}\n\n"
+    text = f"List Bans From Bot:\nCount: {len(bans)}\n\n"
 
     limit = min(10, len(bans))
 

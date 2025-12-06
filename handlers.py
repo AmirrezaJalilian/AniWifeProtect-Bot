@@ -8,7 +8,7 @@ from dbmanagers.user import get_users,add_user,remove_user
 
 import re
 
-async def message_handler(update, context):
+async def router_command(update,context):
     try:
         if update.effective_message:
             await router.handle(update, context)
@@ -16,6 +16,9 @@ async def message_handler(update, context):
         await send_error(update,context,"Bot",f"Critical Error in message_handler: {e}")
         traceback.print_exc()
 
+async def message_handler(update, context):
+    await router_command(update,context)
+    await anti_link(update,context)
 
 class FilterNewChannelPost(filters.UpdateFilter):
     def filter(self, update):
@@ -76,6 +79,8 @@ async def handle_edited_post(update, context):
         
     except Exception as e:
         await send_error(update,context,"Bot",f"Error re-forwarding: {e}")
+
+
 
 
 async def anti_link(update, context):
