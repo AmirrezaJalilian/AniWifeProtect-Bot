@@ -2,14 +2,14 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from dbmanagers.user import add_ban,remove_ban,get_bans
 from Logger import send_info
-from func import is_owner_or_admin
+from func import is_owner_or_admin_or_moderator
 
 
 async def ban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     
     user_id = update.effective_user.id
     
-    if not await is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
     
     reply = update.effective_message.reply_to_message
@@ -33,7 +33,7 @@ async def ban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
 async def unban_(update:Update,context:ContextTypes.DEFAULT_TYPE,args):
     user_id = update.effective_user.id
     
-    if not await is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
     reply = update.effective_message.reply_to_message
     
@@ -58,7 +58,7 @@ async def ban_list(update: Update, context: ContextTypes.DEFAULT_TYPE,args):
     
     user_id = update.effective_user.id
     
-    if not await is_owner_or_admin(user_id):
+    if not await is_owner_or_admin_or_moderator(user_id):
         return
 
     bans = get_bans()

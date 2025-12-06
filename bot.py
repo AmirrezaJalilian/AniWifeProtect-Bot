@@ -14,7 +14,7 @@ def main():
     
     app.add_handler(MessageHandler(my_channel & IS_EDITED_POST, handle_edited_post))
     
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_handler))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & ~my_channel,message_handler))
 
     app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, join_handler))
 

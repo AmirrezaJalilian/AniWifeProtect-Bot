@@ -17,8 +17,14 @@ async def router_command(update,context):
         traceback.print_exc()
 
 async def message_handler(update, context):
-    await router_command(update,context)
-    await anti_link(update,context)
+    try:
+        await router_command(update, context)
+    except Exception as e:
+        await send_error(update,context,"Bot",f"RouterCommand Error: {e}")
+    try:
+        await anti_link(update, context)
+    except Exception as e:
+        await send_error(update,context,"Bot",f"AntiLink Error: {e}")
 
 class FilterNewChannelPost(filters.UpdateFilter):
     def filter(self, update):
@@ -81,23 +87,15 @@ async def handle_edited_post(update, context):
         await send_error(update,context,"Bot",f"Error re-forwarding: {e}")
 
 
-
-
 async def anti_link(update, context):
+
     message = update.message
-    if not message or not message.text:
+    if not message:
         return
 
-    text = message.text
-
+    text = message.text or ""
     matches = re.findall(LINK_REGEX, text)
-    found_usernames = []
-
-    for link_user, at_user in matches:
-        if link_user:
-            found_usernames.append(link_user)
-        if at_user:
-            found_usernames.append(at_user)
+    found_usernames = [u1 or u2 for u1, u2 in matches]
 
     if not found_usernames:
         return
@@ -109,20 +107,11 @@ async def anti_link(update, context):
             continue
 
         try:
-            member = await chat.get_member(username)
-            if member:
-                add_user(username)
-                continue
-        except:
-            pass
-
-        try:
             await message.delete()
-        except:
-            pass
+        except Exception as e:
+            await send_error(update,context,"Bot","DELETE ERROR:", e)
 
         try:
-            
             await send_warn(
                 update,
                 context,
@@ -131,17 +120,20 @@ async def anti_link(update, context):
                 f"Links are forbidden here!\n"
                 f"Please don’t summon forbidden portals again"
             )
-            
-            await message.reply_html(
+        except Exception as e:
+            await send_error(update,context,"Bot","SEND_WARN ERROR:", e)
+
+        try:
+            await chat.send_message(
                 f"Heyyyyy!!! <b>{message.from_user.mention_html()}</b>\n"
                 f"Links are forbidden here!\n"
-                f"Please don’t summon forbidden portals again"
+                f"Please don’t summon forbidden portals again",
+                parse_mode="HTML"
             )
-        except:
-            pass
+        except Exception as e:
+            await send_error(update,context,"Bot","GROUP SEND ERROR:", e)
 
         return
-
 
 async def join_handler(update, context):
     message = update.message
