@@ -20,14 +20,15 @@ def remove_ban(user_id):
 def get_bans():
     return user.all().get("bans", {})
 
-def is_mute(user_id):
-    return user.get_path(["mutes"], user_id)
-
 def mute(user_id):
-    user.set_path(["mutes"], user_id)
+    user.list_add_path(["mutes"], user_id)
 
 def unmute(user_id):
-    user.remove_path(["mutes"], user_id)
+    user.list_remove_path(["mutes"], user_id)
+
+def is_mute(user_id):
+    mutes = user.get_path(["mutes"], [])
+    return user_id in mutes
 
 def get_mutes():
-    return user.all().get("mutes", {})
+    return user.get_path(["mutes"], [])
