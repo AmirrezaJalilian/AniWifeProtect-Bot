@@ -22,3 +22,6 @@ def add_moderator(user_id):
 
 def remove_moderator(user_id):
     staff.list_remove("moderators",user_id)
+
+def moderator(user_id):
+    return staff.get_path(["moderators"])
