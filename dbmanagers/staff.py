@@ -1,10 +1,7 @@
 from database import DB
+from bot_config import OWNER
 
 staff = DB('staff.json')
-
-
-def admin(user_id):
-    return bool(str(user_id) in admins())
 
 
 def admins():
@@ -29,7 +26,3 @@ def add_moderator(user_id):
 
 def remove_moderator(user_id):
     staff.remove_nested(["moderators", user_id])
-
-
-def moderator(user_id):
-    return bool(str(user_id) in moderators())

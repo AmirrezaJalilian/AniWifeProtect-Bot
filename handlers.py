@@ -5,6 +5,7 @@ from dbmanagers.noticechannel import set_message_map, get_group_message_id
 from Logger import send_error, send_info, send_notice, send_warn
 from telegram.ext import filters
 from dbmanagers.user import get_users, add_user, remove_user
+from func import is_owner_or_admin_or_moderator
 
 import re
 
@@ -97,6 +98,9 @@ async def handle_edited_post(update, context):
 async def anti_link(update, context):
     message = update.message
     if not message:
+        return
+
+    if is_owner_or_admin_or_moderator(update.effective_user.id):
         return
 
     text = message.text or ""

@@ -37,12 +37,12 @@ async def unmute_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
     if not await is_owner_or_admin_or_moderator(user_id):
+        await send_notice(update, context, user_id, "Tried To Use .unmute Command")
         return
     reply = update.effective_message.reply_to_message
 
     if not reply:
         await update.effective_message.reply_text(f"Please Reply To An User")
-        await send_notice(update, context, user_id, "Tried To Use .unmute Command")
         return
 
     target = reply.from_user
@@ -54,7 +54,16 @@ async def unmute_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         await send_notice(update, context, user_id, f"Tried To UnMute User {target_id} But User Is Already Is Mute")
         return
 
-    await update.effective_chat.restrict_member(target_id, permissions=ChatPermissions(can_send_messages=True))
+    await update.effective_chat.restrict_member(target_id, permissions=ChatPermissions(
+        can_send_polls=True,
+        can_send_audios=True,
+        can_send_photos=True,
+        can_send_videos=True,
+        can_send_documents=True,
+        can_send_messages=True,
+        can_send_video_notes=True,
+        can_send_other_messages=True
+    ))
     unmute(target_id)
     asndioha = f"User {target_id} UnMuted"
     await update.effective_message.reply_text(asndioha)

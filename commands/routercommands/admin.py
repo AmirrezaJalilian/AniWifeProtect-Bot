@@ -1,6 +1,6 @@
-from dbmanagers.staff import add_admin, remove_admin, admin
+from dbmanagers.staff import add_admin, remove_admin
 from Logger import send_notice, send_info, send_error
-from func import is_owner
+from func import *
 
 
 async def add_admin_(update, context, args):
@@ -19,7 +19,7 @@ async def add_admin_(update, context, args):
             return
         target_id = reply.from_user.id
 
-        if admin(target_id) is not None:
+        if is_admin(target_id) is not None:
             await update.effective_message.reply_text("User Already Is Admin")
             await send_notice(update, context, update.effective_user.id, f"Tried To Add Admin User {target_id}")
             return
@@ -50,7 +50,7 @@ async def remove_admin_(update, context, args):
             return
         target_id = reply.from_user.id
 
-        if admin(target_id) is None:
+        if is_admin(target_id) is None:
             await update.effective_message.reply_text("User Is Not Admin")
             await send_notice(update, context, update.effective_user.id, f"Tried To Remove Admin User {target_id}")
             return
