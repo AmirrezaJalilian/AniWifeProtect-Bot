@@ -1,34 +1,44 @@
-from database import DataBase
+from database import DB
 
-user = DataBase("user.json")
+user = DB("user.json")
+
 
 def add_user(username_or_userid):
-    user.set_path(["users"], username_or_userid)
+    user.set_nested(["users"], username_or_userid)
+
 
 def remove_user(username_or_userid):
-    user.remove_path(["users"], username_or_userid)
+    user.set_nested(["users"], username_or_userid)
+
 
 def get_users():
-    return user.all().get("users", {})
+    return user.get_all().get("users", {})
+
 
 def add_ban(user_id):
-    user.set_path(["bans"], user_id)
+    user.set_key(["bans"], user_id)
+
 
 def remove_ban(user_id):
-    user.remove_path(["bans"], user_id)
+    user.remove_nested(["bans", user_id])
+
 
 def get_bans():
-    return user.all().get("bans", {})
+    return user.get_all().get("bans", {})
+
 
 def mute(user_id):
-    user.list_add_path(["mutes"], user_id)
+    user.set_nested(["mutes"], user_id)
+
 
 def unmute(user_id):
-    user.list_remove_path(["mutes"], user_id)
+    user.remove_nested(["mutes", user_id])
+
 
 def is_mute(user_id):
-    mutes = user.get_path(["mutes"], [])
+    mutes = user.get_nested(["mutes"])
     return user_id in mutes
 
+
 def get_mutes():
-    return user.get_path(["mutes"], [])
+    return user.get_nested(["mutes"])

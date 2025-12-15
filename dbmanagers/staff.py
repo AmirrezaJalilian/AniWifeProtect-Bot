@@ -1,27 +1,35 @@
-from database import DataBase
+from database import DB
 
-staff=DataBase('staff.json')
+staff = DB('staff.json')
+
 
 def admin(user_id):
-    return staff.get_path(["admins"],user_id)
+    return bool(str(user_id) in admins())
+
 
 def admins():
-    return staff.get_path(["admins"], [])
+    return staff.get_nested(["admins"])
+
 
 def add_admin(user_id):
-    staff.list_add("admins",user_id)
+    staff.set_nested("admins", user_id)
+
 
 def remove_admin(user_id):
-    staff.list_remove("admins",user_id)
+    staff.remove_nested(["admins", user_id])
+
 
 def moderators():
-    return staff.get_path(["moderators"], [])
+    return staff.get_nested(["moderators"])
+
 
 def add_moderator(user_id):
-    staff.list_add("moderators",user_id)
+    staff.set_nested("moderators", user_id)
+
 
 def remove_moderator(user_id):
-    staff.list_remove("moderators",user_id)
+    staff.remove_nested(["moderators", user_id])
+
 
 def moderator(user_id):
-    return staff.get_path(["moderators"])
+    return bool(str(user_id) in moderators())

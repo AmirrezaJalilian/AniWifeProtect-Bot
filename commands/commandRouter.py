@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
+
 class CommandRouter:
     def __init__(self, prefix="."):
         self.prefix = prefix
@@ -10,7 +11,7 @@ class CommandRouter:
         self.routes[path] = func
 
     async def handle(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        
+
         if not update.message:
             return
         text = update.message.text.strip()
@@ -18,7 +19,7 @@ class CommandRouter:
             return
         if text == ".":
             return
-    
+
         cmd_text = text[len(self.prefix):].lstrip(".")
         parts = cmd_text.split()
         command = parts[0]
