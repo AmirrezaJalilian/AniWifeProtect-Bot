@@ -1,7 +1,6 @@
 from database import DB
-from bot_config import OWNER
 
-staff = DB('staff.json')
+staff = DB('staff')
 
 
 def admins():

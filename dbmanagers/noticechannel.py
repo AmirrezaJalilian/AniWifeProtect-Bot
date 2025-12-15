@@ -1,6 +1,6 @@
 from database import DB
 
-notice_channel = DB("noticechannel.json")
+notice_channel = DB("noticechannel")
 
 
 def set_message_map(channel_msg_id, group_msg_id):

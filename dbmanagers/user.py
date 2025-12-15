@@ -1,6 +1,6 @@
 from database import DB
 
-user = DB("user.json")
+user = DB("user")
 
 
 def add_user(username_or_userid):
