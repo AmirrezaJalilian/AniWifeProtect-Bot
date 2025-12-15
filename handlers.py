@@ -100,7 +100,7 @@ async def anti_link(update, context):
     if not message:
         return
 
-    if is_owner_or_admin_or_moderator(update.effective_user.id):
+    if await is_owner_or_admin_or_moderator(update.effective_user.id):
         return
 
     text = message.text or ""
