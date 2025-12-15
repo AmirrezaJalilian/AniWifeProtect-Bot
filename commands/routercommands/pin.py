@@ -14,7 +14,7 @@ async def pin(update: Update, context: ContextTypes.DEFAULT_TYPE, message_id=Non
     reply = update.effective_message.reply_to_message
     userid = update.effective_user.id
 
-    if not is_owner_or_admin_or_moderator(userid):
+    if not await is_owner_or_admin_or_moderator(userid):
         await send_notice(update, context, userid, "Tried To Use Command .pin")
         return
 
@@ -37,7 +37,7 @@ async def unpin(update: Update, context: ContextTypes.DEFAULT_TYPE, message_id):
     reply = update.effective_message.reply_to_message
     userid = update.effective_user.id
 
-    if not is_owner_or_admin_or_moderator(userid):
+    if not await is_owner_or_admin_or_moderator(userid):
         await send_notice(update, context, userid, "Tried To Use Command .unpin")
         return
 
