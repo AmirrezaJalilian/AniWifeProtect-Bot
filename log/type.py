@@ -1,5 +1,5 @@
 class LogTypes:
-    NOTICE = "Notice" | str
-    INFO = "Info" | str
-    WARN = "Warn" | str
-    ERROR = "Error" | str
+    NOTICE = "Notice"
+    INFO = "Info"
+    WARN = "Warn"
+    ERROR = "Error"

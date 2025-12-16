@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from db.user import is_owner, is_admin, set_role
+from db.user import is_owner, is_admin, set_role, exist_user, add_user
 from log.logger import send_log
 from log.type import LogTypes
 
@@ -21,8 +21,10 @@ async def add_moderator(update: Update, context: ContextTypes.DEFAULT_TYPE, args
         target = reply.from_user
         target_id = target.id
         target_username = target.username
+        if not exist_user(target_id):
+            add_user(target_id, target_username)
 
-        if is_admin(target_id) is not None:
+        if not is_admin(target_id):
             await update.effective_message.reply_text("User Already Is Moderator")
             return
         set_role(target_id, 'admin')
@@ -47,8 +49,10 @@ async def remove_moderator(update: Update, context: ContextTypes, args):
         target = reply.from_user
         target_id = target.id
         target_username = target.username
+        if not exist_user(target_id):
+            add_user(target_id, target_username)
 
-        if is_admin(target_id) is None:
+        if not is_admin(target_id):
             await update.effective_message.reply_text("User Is Not Moderator")
             return
         set_role(target_id)

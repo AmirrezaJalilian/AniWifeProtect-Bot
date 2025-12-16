@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from db.user import is_owner, is_admin, set_role
+from db.user import is_owner, is_admin, set_role, exist_user, add_user
 from log.logger import send_log
 from log.type import LogTypes
 
@@ -12,7 +12,7 @@ async def add_admin(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         reply = update.effective_message.reply_to_message
 
         if not is_owner(userid):
-            await send_log(context, LogTypes.NOTICE, userid, "Tried To Use .add.admin Command")
+            await send_log(context, LogTypes.NOTICE, userid, "Tried To Use .staff.add.admin Command")
             return
 
         if not reply:
@@ -22,7 +22,10 @@ async def add_admin(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         target_id = target.id
         target_username = target.username
 
-        if is_admin(target_id) is not None:
+        if not exist_user(target_id):
+            add_user(target_id, target_username)
+
+        if is_admin(target_id):
             await update.effective_message.reply_text("User Already Is Admin")
             return
         set_role(target_id, 'admin')
@@ -37,7 +40,7 @@ async def remove_admin(update: Update, context: ContextTypes, args):
     try:
         reply = update.effective_message.reply_to_message
         if not is_owner(user_id):
-            await send_log(context, LogTypes.NOTICE, user_id, "Tried To Use .remove.admin Command")
+            await send_log(context, LogTypes.NOTICE, user_id, "Tried To Use .staff.remove.admin Command")
             return
 
         if not reply:
@@ -48,7 +51,10 @@ async def remove_admin(update: Update, context: ContextTypes, args):
         target_id = target.id
         target_username = target.username
 
-        if is_admin(target_id) is None:
+        if not exist_user(target_id):
+            add_user(target_id, target_username)
+
+        if not is_admin(target_id):
             await update.effective_message.reply_text("User Is Not Admin")
             return
         set_role(target_id)

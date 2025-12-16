@@ -8,7 +8,7 @@ from db.user import is_mute, add_mute, is_staff, remove_mute, get_mutes
 async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_staff(user_id):
+    if not is_staff(user_id):
         return
     reply = update.effective_message.reply_to_message
 
@@ -34,7 +34,7 @@ async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
 async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_staff(user_id):
+    if not is_staff(user_id):
         return
     reply = update.effective_message.reply_to_message
 
@@ -69,7 +69,7 @@ async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
 async def list_mute(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_staff(user_id):
+    if not is_staff(user_id):
         return
     bans = get_mutes()
 

@@ -45,15 +45,15 @@ def get_users_username():
 
 
 def get_users():
-    return user.get_all().get("users", {})
+    return user.get_all()["users"]
 
 
 def get_mutes():
-    return user.get_all().get("mutes", {})
+    return user.get_all()["mutes"]
 
 
 def get_bans():
-    return user.get_all().get("bans", {})
+    return user.get_all()["bans"]
 
 
 def add_user(user_id, username):
@@ -64,27 +64,27 @@ def add_user(user_id, username):
 
 
 def add_mute(user_id):
-    user.set_nested(["mutes"], user_id)
+    user.set_nested(["mutes", user_id], True)
 
 
 def add_ban(user_id):
-    user.set_key(["bans"], user_id)
+    user.set_key(["bans", str(user_id)], True)
 
 
 def remove_user(userid):
-    user.remove_nested(["users", userid])
+    user.remove_nested(["users", str(userid)])
 
 
 def remove_mute(user_id):
-    user.remove_nested(["mutes", user_id])
+    user.remove_nested(["mutes", str(user_id)])
 
 
 def remove_ban(user_id):
-    user.remove_nested(["bans", user_id])
+    user.remove_nested(["bans", str(user_id)])
 
 
 def get_user_role(userid):
-    return get_user(userid).get('role')
+    return get_user(userid)['role']
 
 
 def get_user_username(userid):

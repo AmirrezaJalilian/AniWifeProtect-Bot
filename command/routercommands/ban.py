@@ -32,7 +32,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
 async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_staff(user_id):
+    if not is_staff(user_id):
         return
     reply = update.effective_message.reply_to_message
 
@@ -55,7 +55,7 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
 async def list_ban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_staff(user_id):
+    if not is_staff(user_id):
         return
 
     bans = get_bans()

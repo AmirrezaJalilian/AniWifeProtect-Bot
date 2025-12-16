@@ -3,7 +3,7 @@ import re
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from db.user import is_owner, get_users_username
+from db.user import is_staff, get_users_username
 from bot_config import LINK_REGEX
 from log.logger import send_log
 from log.type import LogTypes
@@ -16,7 +16,7 @@ async def anti_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not message:
         return
 
-    if await is_owner(update.effective_user.id):
+    if is_staff(update.effective_user.id):
         return
 
     text = message.text or ""

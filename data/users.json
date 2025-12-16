@@ -1,1 +1,15 @@
-{}
+{
+    "mutes": {},
+    "bans": {},
+    "admins": {},
+    "moderators": {},
+    "users": {
+        "6821902217": {
+            "role": "member",
+            "username": "MrTatsumi"
+        },
+        "6821902217": {
+            "role": "admin"
+        }
+    }
+}

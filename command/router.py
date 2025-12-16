@@ -3,9 +3,9 @@ from command.routercommands.admin import add_admin, remove_admin
 from command.routercommands.moderator import add_moderator, remove_moderator
 from command.routercommands.mute import mute, unmute, list_mute
 from command.routercommands.ban import ban, unban, list_ban
-from command.routercommands.pin import *
+from command.routercommands.pin import pin, unpin
 
-router = CommandRouter()
+router = CommandRouter(".")
 
 router.add("staff.add.admin", add_admin)
 router.add("staff.remove.admin", remove_admin)
