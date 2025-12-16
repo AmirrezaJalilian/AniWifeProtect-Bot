@@ -1,29 +1,31 @@
-from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, filters
+from telegram.ext import (
+    ApplicationBuilder,
+    MessageHandler,
+    CommandHandler,
+    filters
+)
 
-from bot_config import Token, SOURCE_CHANNEL_ID
-from commands.start import start
-from handlers import message_handler, handle_new_post, handle_edited_post, IS_EDITED_POST, IS_NEW_POST, join_handler, \
-    left_handler
+from handler.join import join_handler
+from handler.left import left_handler
+from handler.anti_link import anti_link
+from handler.command_router import router_command
+from bot_config import TOKEN
+from command.start import start
 
 
 def main():
-    app = ApplicationBuilder().token(Token).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
 
-    my_channel = filters.Chat(chat_id=SOURCE_CHANNEL_ID)
-
-    app.add_handler(MessageHandler(my_channel & IS_NEW_POST, handle_new_post))
-
-    app.add_handler(MessageHandler(my_channel & IS_EDITED_POST, handle_edited_post))
-
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & ~my_channel, message_handler))
+    app.add_handler(MessageHandler(filters.TEXT, anti_link))
+    app.add_handler(MessageHandler(filters.TEXT, router_command))
 
     app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, join_handler))
 
     app.add_handler(MessageHandler(filters.StatusUpdate.LEFT_CHAT_MEMBER, left_handler))
 
-    app.run_polling(drop_pending_updates=True)
+    app.run_polling()
 
 
 if __name__ == "__main__":

@@ -1,14 +1,14 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from dbmanagers.user import add_ban, remove_ban, get_bans
-from Logger import send_info
-from func import is_owner_or_admin_or_moderator
+from db.user import add_ban, remove_ban, get_bans, is_staff
+from log.logger import send_log
+from log.type import LogTypes
 
 
-async def ban_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
+async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_owner_or_admin_or_moderator(user_id):
+    if not is_staff(user_id):
         return
 
     reply = update.effective_message.reply_to_message
@@ -18,22 +18,21 @@ async def ban_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         return
 
     target = reply.from_user
-
     target_id = target.id
+    target_username = target.username
 
     chat = update.effective_chat
 
     await chat.ban_member(target_id)
     add_ban(target_id)
-    tt = f"User <code>{target_id}</code> Banned!"
-    await update.effective_message.reply_text(tt)
-    await send_info(update, context, user_id, tt + f"\nFrom Group {chat.id}")
+    await update.effective_message.reply_text(f"User <code>{target_id}</code> Banned!")
+    await send_log(context, LogTypes.INFO, "Group", f"Banned User {target_id} - {target_username}")
 
 
-async def unban_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
+async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_owner_or_admin_or_moderator(user_id):
+    if not await is_staff(user_id):
         return
     reply = update.effective_message.reply_to_message
 
@@ -42,22 +41,21 @@ async def unban_(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         return
 
     target = reply.from_user
-
     target_id = target.id
+    target_username = target.username
 
     chat = update.effective_chat
 
     await chat.unban_member(target_id)
     remove_ban(target_id)
-    tt = f"User <code>{target_id}</code> UnBanned!"
-    await update.effective_message.reply_text(tt)
-    await send_info(update, context, user_id, tt + f"\nFrom Group {chat.id}")
+    await update.effective_message.reply_text(f"User <code>{target_id}</code> UnBanned!")
+    await send_log(context, LogTypes.INFO, "Group", f"UnBanned User {user_id} - {target_username}")
 
 
-async def ban_list(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
+async def list_ban(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
     user_id = update.effective_user.id
 
-    if not await is_owner_or_admin_or_moderator(user_id):
+    if not await is_staff(user_id):
         return
 
     bans = get_bans()
@@ -66,7 +64,6 @@ async def ban_list(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         await update.effective_message.reply_text("No Baned Users.")
         return
 
-    user_id = update.effective_user.id
     text = f"List Bans From Bot: \nCount: {len(bans)}\n\n"
 
     limit = min(10, len(bans))
@@ -80,4 +77,3 @@ async def ban_list(update: Update, context: ContextTypes.DEFAULT_TYPE, args):
         text += "..."
 
     await update.effective_message.reply_text(text)
-    await send_info(update, context, user_id, text)
