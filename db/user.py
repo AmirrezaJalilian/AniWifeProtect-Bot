@@ -1,7 +1,7 @@
 from db.db import DB
 from bot_config import OWNER_ID
 
-user = DB("user")
+user = DB("users")
 
 
 def is_staff(userid):
